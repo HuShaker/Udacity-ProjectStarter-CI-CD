@@ -64,6 +64,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-dependencies
+      - success-notify
       - failure-notify
 
   build-backend:
@@ -147,7 +148,6 @@ jobs:
            npm audit fix --force --audit-level=critical
 #          npm audit --audit-level=critical
       - failure-notify
-      - success-notify
 #
 #  deploy-infrastructure:
 #    docker:
