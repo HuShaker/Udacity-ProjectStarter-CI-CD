@@ -1,7 +1,8 @@
 version: 2.1
 
 Orbs:
-  slack : circleci/slack@4.9.3
+  slack : circleci/slack@4.12.0
+
 
 commands:
   failure-notify:
