@@ -310,14 +310,13 @@ jobs:
 #
   success-notify:
     docker:
-      - image: cimg/base
+      - image: cimg/base:stable
     steps:
+      - run: touch $BASH_ENV
       - slack/notify:
           event: pass
           channel: circleci
           template: success_tagged_deployment_1
-
-
 
 
 workflows:
