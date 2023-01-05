@@ -1,6 +1,6 @@
 version: 2.1
 
-Orbs:
+orbs:
   slack : circleci/slack@4.12.0
 
 commands:
@@ -308,14 +308,14 @@ jobs:
 #            fi
 #            
 #
-  # success-notify:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - slack/notify:
-  #         event: pass
-  #         channel: circleci
-  #         template: success_tagged_deployment_1
+  success-notify:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - slack/notify:
+          event: pass
+          channel: circleci
+          template: success_tagged_deployment_1
 
 
 
