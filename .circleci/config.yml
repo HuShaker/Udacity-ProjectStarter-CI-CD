@@ -10,12 +10,7 @@ commands:
           event: fail
           channel: circleci
           template: basic_fail_1
-  success-notify:
-    steps:
-      - slack/notify:
-          event: pass
-          channel: circleci
-          template: success_tagged_deployment_1
+
 #  destroy-environment:
 #    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
 #    parameters:
@@ -64,7 +59,6 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-dependencies
-      - success-notify
       - failure-notify
 
   build-backend:
@@ -315,15 +309,15 @@ jobs:
 #            fi
 #            
 #
-  # success-notify:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - run: touch $BASH_ENV
-  #     - slack/notify:
-  #         event: pass
-  #         channel: circleci
-  #         template: success_tagged_deployment_1
+  success-notify:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: touch $BASH_ENV
+      - slack/notify:
+          event: pass
+          channel: circleci
+          template: success_tagged_deployment_1
 
 
 workflows:
@@ -339,12 +333,12 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      # - success-notify:
-      #     requires:
-      #       - test-frontend
-      #       - test-backend
-      #       - scan-backend
-      #       - scan-frontend
+      - success-notify:
+          requires:
+            - test-frontend
+            - test-backend
+            - scan-backend
+            - scan-frontend
 #      - deploy-infrastructure:
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
