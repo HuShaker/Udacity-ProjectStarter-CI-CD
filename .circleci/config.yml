@@ -4,7 +4,7 @@ orbs:
   slack : circleci/slack@4.12.0
 
 commands:
-  failure-notify:
+  failure-notification:
     steps:
       - slack/notify:
           event: fail
@@ -59,7 +59,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-dependencies
-      - failure-notify
+      - failure-notification
 
   build-backend:
     docker:
@@ -77,7 +77,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-dependencies
-      - failure-notify
+      - failure-notification
 
   test-frontend:
     docker:
@@ -92,7 +92,7 @@ jobs:
            cd frontend
            npm install
            npm test
-      - failure-notify
+      - failure-notification
                
   test-backend:
     docker:
@@ -107,7 +107,7 @@ jobs:
            cd backend
            npm install
            npm test
-      - failure-notify
+      - failure-notification
            
   scan-frontend:
     docker:
@@ -124,7 +124,7 @@ jobs:
            npm audit fix --force --audit-level=critical
            npm audit fix --force --audit-level=critical
            npm audit --audit-level=critical
-      - failure-notify
+      - failure-notification
 
   scan-backend:
     docker:
@@ -141,7 +141,7 @@ jobs:
            npm audit fix --force --audit-level=critical
            npm audit fix --force --audit-level=critical
 #          npm audit --audit-level=critical
-      - failure-notify
+      - failure-notification
 #
 #  deploy-infrastructure:
 #    docker:
@@ -309,7 +309,7 @@ jobs:
 #            fi
 #            
 #
-  success-notify:
+  success-notification:
     docker:
       - image: cimg/base:stable
     steps:
@@ -317,7 +317,7 @@ jobs:
       - slack/notify:
           event: pass
           channel: circleci
-          template: success_tagged_deployment_1
+          template: success_tagged_deploy_1
 
 
 workflows:
@@ -333,7 +333,7 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - success-notify:
+      - success-notification:
           requires:
             - test-frontend
             - test-backend
