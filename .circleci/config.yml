@@ -196,7 +196,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txtt
+            cat .circleci/ansible/inventory.txt
 
       - persist_to_workspace:
           root: ~/
@@ -218,7 +218,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cd .circleci/ansible
+            cd .circleci/ansiblesssssssssss
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment      
