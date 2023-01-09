@@ -210,6 +210,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli-v2 
       - install-ansible-v2
       - add_ssh_keys:
          fingerprints: ["1a:cf:43:ad:3f:ca:43:b2:8c:96:b0:59:3f:98:b1:12"]
@@ -228,6 +229,7 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
+      - install-awscli-v2 
       - run:
           name: Run migrations
           command: |
