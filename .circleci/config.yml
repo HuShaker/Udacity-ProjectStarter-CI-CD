@@ -308,6 +308,7 @@ jobs:
       - run:
           name: package Backend
           command: |
+            npm install npm@latest -g
             cd backend
             npm run build
             tar -czf artifact.tar.gz dist/* package*.json
