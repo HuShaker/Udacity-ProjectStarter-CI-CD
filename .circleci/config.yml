@@ -363,8 +363,6 @@ jobs:
       - revert-migrations   
 
 
-      # Here's where you will add some code to rollback on failure  
-
 #  cloudfront-update:
 #    docker:
 #      # Docker image here that supports AWS CLI
@@ -444,7 +442,7 @@ workflows:
       - deploy-backend:
           requires: [run-migrations]
       - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
+          requires: [deploy-frontend]
 #      - cloudfront-update:
 #          requires: [smoke-test]
 #      - cleanup:
