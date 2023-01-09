@@ -308,10 +308,9 @@ jobs:
       - run:
           name: package Backend
           command: |
-            npm install npm@latest -g
             cd backend
             npm run build
-            tar -czf artifact.tar.gz dist/* package*.json
+            tar -czf artifact.tar.gz dist/* package*
 
             cd .. 
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
@@ -437,3 +436,5 @@ workflows:
 #          requires: [cloudfront-update]
 #
 
+
+#           npm install npm@latest -g
