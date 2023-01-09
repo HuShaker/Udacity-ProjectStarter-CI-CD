@@ -20,15 +20,23 @@ commands:
             unzip awscliv2.zip
             sudo ./aws/install
 
-  install-ansible-v2:
+  install-ansible:
     steps:
       - run:
-          name: Install Ansible V2
+          name: Install Ansible
           command: |
-            sudo apt update
+            sudo apt update -y
             sudo apt install software-properties-common
             sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+            sudo apt install ansible -y
+
+  install_nodejs:
+    steps:
+      - run:
+          name: Install Node.js 13
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt-get install -y nodejs
 
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -211,7 +219,7 @@ jobs:
     steps:
       - checkout
       - install-awscli-v2 
-      - install-ansible-v2
+      - install-ansible
       - add_ssh_keys:
          fingerprints: ["1a:cf:43:ad:3f:ca:43:b2:8c:96:b0:59:3f:98:b1:12"]
       - attach_workspace:
@@ -244,28 +252,28 @@ jobs:
               curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
       - destroy-environment
       - revert-migrations     
-#
-#  deploy-frontend:
-#    docker:
-#      # Docker image here that supports AWS CLI
-#    steps:
-#      # Checkout code from git
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # your code here
-#      - run:
-#          name: Get backend url
-#          command: |
-#            # your code here
-#            export API_URL="http://${BACKEND_IP}:3030"
-#            echo "${API_URL}"
-#      - run:
-#          name: Deploy frontend objects
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure      
-#                    
+
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+    steps:
+      # Checkout code from git
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+      # Here's where you will add some code to rollback on failure      
+                    
 #  deploy-backend:
 #    docker:
 #      # Docker image here that supports Ansible
