@@ -376,13 +376,6 @@ jobs:
       - install-awscli-v2
       - install_nodejs
       - run:
-          name: Update cloudfront distribution
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --stack-name InitialStack
-      - run:
           name: Save Old Workflow ID to kvdb.io
           command: |
             export OLD_WORKFLOW_ID=$(aws cloudformation \
@@ -390,6 +383,13 @@ jobs:
                       --no-paginate --output text)
             echo Old Wokflow ID: $OLD_WORKFLOW_ID
             curl https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name InitialStack
 
       - destroy-environment
       - revert-migrations   
@@ -412,11 +412,16 @@ jobs:
             export oldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
             echo The Workflow ID is: $oldWorkflowID
             
-            if [[ "${STACKS[@]}" =~ "${oldWorkflowID}" ]]
+            if [ -z "${oldWorkflowID}" ]
             then
-              aws s3 rm "s3://udapeople-${oldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldworkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldworkflowID}"
+               echo The Workflow ID = Null
+            else
+              if [[ "${STACKS[@]}" =~ "${oldWorkflowID}" ]]
+              then
+                aws s3 rm "s3://udapeople-${oldWorkflowID}" --recursive
+                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldworkflowID}"
+                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldworkflowID}"
+              fi
             fi
 
 
